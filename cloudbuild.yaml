@@ -1,25 +1,26 @@
-steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'build', '-t',
-      'us-central1-docker.pkg.dev/rythukooli/rythukooli-repo/rythukooli-api', '.'
-    ]
+# Use the official .NET SDK image to build the app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
 
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'push',
-      'us-central1-docker.pkg.dev/rythukooli/rythukooli-repo/rythukooli-api'
-    ]
+# Copy solution and project files
+COPY RythuKooliAPI/RythuKooliAPI.csproj RythuKooliAPI/
+COPY Core/Core.csproj Core/
+COPY Infrastructure/Infrastructure.csproj Infrastructure/
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args: [
-      'run', 'deploy', 'taskzyservice',
-      '--image', 'us-central1-docker.pkg.dev/rythukooli/rythukooli-repo/rythukooli-api',
-      '--region', 'us-central1',
-      '--platform', 'managed',
-      '--allow-unauthenticated'
-    ]
+# Restore dependencies
+RUN dotnet restore RythuKooliAPI/RythuKooliAPI.csproj
 
-images:
-  - 'us-central1-docker.pkg.dev/rythukooli/rythukooli-repo/rythukooli-api'
+# Copy the rest of the files
+COPY . .
+
+# Build and publish the app
+RUN dotnet publish RythuKooliAPI/RythuKooliAPI.csproj -c Release -o /app/publish
+
+# Use the ASP.NET runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+
+# Expose port and set entry point
+EXPOSE 80
+ENTRYPOINT ["dotnet", "RythuKooliAPI.dll"]
