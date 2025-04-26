@@ -7,7 +7,7 @@ COPY RythuKooliAPI.sln ./
 COPY Core/Core.csproj Core/
 COPY Infrastructure/Infrastructure.csproj Infrastructure/
 COPY RythuKooliAPI/RythuKooliAPI.csproj RythuKooliAPI/
-
+ 
 # Restore dependencies
 RUN dotnet restore RythuKooliAPI.sln
 
