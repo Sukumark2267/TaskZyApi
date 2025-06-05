@@ -75,7 +75,7 @@ namespace RythuKooliAPI.Controllers
                     Time = workPostDto.Time,
                     ContactNumber = workPostDto.ContactNumber,
                     NoOfPeople = workPostDto.NoOfPeople,
-                    postedBy = workPostDto.postedBy,
+                    PostedBy = workPostDto.PostedBy,
                     ImagePath = relativePath  // Save only the path in DB
                 };
                 await _workPostRepository.AddWorkPostAsync(workPost);
