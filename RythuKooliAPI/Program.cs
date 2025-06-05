@@ -69,6 +69,14 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskZy API V1");
+    c.RoutePrefix = string.Empty;
+});
+
 // Log incoming request body (optional for debugging)
 app.Use(async (context, next) =>
 {
