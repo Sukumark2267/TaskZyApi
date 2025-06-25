@@ -10,7 +10,7 @@ namespace Core.Interfaces
     public interface IUserRepository
     {
         Task<User> RegisterAsync(User user);
-        Task<User> GetUserByUsernameAsync(string username);
+        Task<User> GetUserByUsernameAsync(string username); 
         Task<bool> UserExistsAsync(string username);
         Task<User?> GetUserByUserIdAsync(int UserId);
         Task<bool> UpdateUserAsync(User user);
